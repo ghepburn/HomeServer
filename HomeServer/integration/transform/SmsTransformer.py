@@ -1,4 +1,4 @@
-from ..models.Sms import Sms
+from ..models.HomeServerSms import HomeServerSms as Sms
 
 class SmsTransformer():
 

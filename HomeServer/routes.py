@@ -6,7 +6,7 @@ from . import app
 
 from .integration.Integrator import Integrator
 
-from .models.Response import Response
+from .Manager import Manager
 
 
 @app.route('/')
@@ -15,31 +15,24 @@ def base():
     return 'HOME SERVER IN SERVICE'
 
 
-# accepts
-# {
-#   data: {
-#       siteSettings: {}
-#   }
-# }
 @app.route('/receive/sms', methods=["POST"])
 def receiveSms():
     smsIntegrator = Integrator("models/Sms")
+    personalManager = Manager()
 
     payload = request.data
     data = json.loads(payload)
 
     sms = smsIntegrator.integrate(data)
 
-    print(sms)
+    personalManager.receiveSms(sms)
 
     if hasattr(sms, "isError"):
         print(sms.message)
         response = {"status": sms.code, "message": sms.message}
         return response
     
-    
-    print("GOT THE SMS!")
-    print(sms)
     sms = sms.__dict__
-    return {"status": 200, "data": sms}
-
+    response = {"status": 200, "data": sms}
+    print(response)
+    return response
