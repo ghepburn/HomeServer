@@ -1,31 +1,37 @@
 // import logo from './home_grey.svg';
 import React from 'react';
-import './css/App.css';
+import './css/App.scss';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
-import Navbar from './services/navigation/Navbar';
 
 import Home from './services/home/Home';
 import Dashboard from './services/dashboard/Dashboard';
 import Photos from './services/photoService/Photos';
-import Finances from './services/financesService/Finances';
+
+import FinanceService from './services/financeService/FinanceService';
+import SpendingService from './services/financeService/subServices/spendingService/SpendingService';
+
+import Navbar from "./services/navigation/Navbar";
 
 class App extends React.Component {
 
   render() {
     return (
       <div className="App">
-        <header className="App-header">
+        <div className="app-content">
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />
+            </Routes>
+            <Navbar />
+            <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/photos" element={<Photos />} />
-              <Route path="/finances" element={<Finances />} />
+              <Route path="/dashboard/photos" element={<Photos />} />
+              <Route path="/dashboard/finances" element={<FinanceService />} />
+              <Route path="/dashboard/finances/spending" element={<SpendingService />} />
             </Routes>
           </BrowserRouter>
-        </header>
+        </div>
       </div>
     );
   }

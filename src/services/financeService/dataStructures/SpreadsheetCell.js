@@ -1,12 +1,10 @@
 import Transaction from "./Transaction";
 
-const SpreadsheetCell = (props) => {
-
-    let cell = <Transaction data={props.data} columns={props.columns}/>;
+const SpreadsheetCell = ({value}) => {
 
     return(
         <div className="spreadsheet-cell">
-            {cell}
+            {value}
         </div>
     );
 }

@@ -2,29 +2,55 @@ import axios from "axios";
 
 class Client {
 
+    headers = {
+        "Access-Control-Allow-Origin": "*" 
+    };
+
     constructor(baseUrl) {
         this.client = axios.create({
-            baseUrl: baseUrl
+            baseURL: baseUrl,
+            headers: this.headers
         });
     }
 
-    async get(url) {
-        return axios.get(url);
+    get(url) {
+        try {
+            let transactions = this.client.get(url)
+            .then((transactions)=> {
+                return transactions.data;
+            })
+            return transactions;
+        } catch(error) {
+            console.log("GET ERROR:")
+            console.error(error);
+        }
     }
 
     async put(url, data) {
-        let response = await this.client.put(url, data);
-        return response;
+        try {
+            let response = await this.client.put(url, data);
+            return response;
+        } catch(error) {
+            console.error(error)
+        }
     }
 
     async post(url, data) {
-        let response = await this.clienbt.post(url, data);
-        return response;
+        try {
+            let response = await this.client.post(url, data);
+            return response;
+        } catch(error) {
+            console.error(error)
+        }
     }
 
     async delete(url) {
-        let response = await this.client.delete(url);
-        return response;
+        try {
+            let response = await this.client.delete(url);
+            return response;
+        } catch(error) {
+            console.error(error)
+        }
     }
 }
 

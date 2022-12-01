@@ -1,12 +1,7 @@
-const List = (props) => {
-
-    let items = props.data.map((item) => {
-        return item;
-    })
-
-    return(
+const List = ({data}) => {
+    return (
         <div className="list">
-            {items}
+            {data}
         </div>
     );
 }

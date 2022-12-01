@@ -1,14 +1,10 @@
 
 
-const Row = (props) => {
-
-    let items = props.data.map((item) => {
-        return item;
-    })
+const Row = ({data}) => {
 
     return(
         <div className="row">
-            {items}
+            {data}
         </div>
     );
 }
