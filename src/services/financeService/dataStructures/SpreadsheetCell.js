@@ -1,9 +1,12 @@
-import Transaction from "./Transaction";
 
-const SpreadsheetCell = ({value}) => {
 
+const SpreadsheetCell = ({value, onClick}) => {
+    const click = () => {
+        onClick(value);
+    }
+    
     return(
-        <div className="spreadsheet-cell">
+        <div className="spreadsheet-cell" onClick={click}>
             {value}
         </div>
     );

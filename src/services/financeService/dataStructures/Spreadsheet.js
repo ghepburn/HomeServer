@@ -2,12 +2,12 @@ import List from "../../utils/List";
 import Row from "../../utils/Row";
 import SpreadsheetCell from "./SpreadsheetCell";
 
-const Spreadsheet = ({data}) => {
+const Spreadsheet = ({data, sortBy}) => {
     const columns = data.length > 0 ? Object.keys(data[0]) : [];
     const itemsInRow = columns.length;
    
     let topRowCells = columns.map((col) => {
-        return <SpreadsheetCell value={col} />
+        return <SpreadsheetCell value={col} onClick={sortBy}/>
     })
     let topRow = <Row data={topRowCells} />
     
