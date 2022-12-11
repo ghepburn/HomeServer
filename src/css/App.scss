@@ -4,7 +4,7 @@
 @import 'navigation';
 @import 'buttons';
 @import 'utils';
-@import 'FinanceService';
+@import "FinancialServices/Spreadsheet";
 @import 'Variables';
 
 .App {
@@ -42,4 +42,8 @@
   
   .app-content {
     padding: 2%;
+  }
+
+  .hidden {
+    display: none;
   }

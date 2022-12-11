@@ -1,7 +1,7 @@
 
 import FinanceClient from "../../FinanceClient";
 import Spreadsheet from "../../dataStructures/Spreadsheet";
-import Filterable from "../../dataStructures/Filterable";
+import Filter from "../../dataStructures/filter/Filter";
 import React from "react";
 
 class SpendingService extends React.Component {
@@ -12,9 +12,6 @@ class SpendingService extends React.Component {
 
         this.state = {
             transactions: [],
-            transactionTypes: {},
-            transactionCategories: {},
-            transactionSources: {},
 
             sortDirection:false, //allows sorting to alternate directions
             fitlers: {}
@@ -23,37 +20,40 @@ class SpendingService extends React.Component {
     } 
 
     async componentDidMount() {
-        let transactions = await this.client.getTransactions();
+        this.getTransactions();
+    }
+
+    getTransactions = async (args={}) => {
+        let transactions = await this.client.getTransactions(args);
+        transactions = transactions.map((transaction) => {
+            return transaction;
+        })
         this.setState({transactions: transactions});
-
-        let manipulatedTransactions = [];
-        this.setState({manipulatedTransactions: manipulatedTransactions});
-
-        let transactionTypes = await this.client.getTransactionTypes();
-        this.setState({transactionTypes: transactionTypes});
-
-        let transactionCategories = await this.client.getTransactionCategories();
-        this.setState({transactionCategories: transactionCategories});
-
-        let transactionSources = await this.client.getTransactionSources();
-        this.setState({transactionSources: transactionSources});
     }
 
     sortBy = (sortBy) => {
         let transactions = this.state.transactions;
 
-        // sort transactions by sortBy
         let sortDirection = this.state.sortDirection;
 
         transactions.sort(
+            // > 0 -> sort a after b
+            // < 0 -> sort a before b
+            // == 0 -> keep origional order of a and b
             (a, b) => {
                 if (sortDirection) {
                     if(a[sortBy] > b[sortBy]) return 1;
                     if(a[sortBy] < b[sortBy]) return -1;
+                    if(a[sortBy] == null && b[sortBy] == null) return 0;
+                    if(a[sortBy] != null && b[sortBy] == null) return 1;
+                    if(a[sortBy] == null && b[sortBy] != null) return -1;
                     return 0;
                 } else {
                     if(a[sortBy] < b[sortBy]) return 1;
                     if(a[sortBy] > b[sortBy]) return -1;
+                    if(a[sortBy] == null && b[sortBy] == null) return 0;
+                    if(a[sortBy] != null && b[sortBy] == null) return -1;
+                    if(a[sortBy] == null && b[sortBy] != null) return 1;
                     return 0;
                 }
             }
@@ -63,14 +63,32 @@ class SpendingService extends React.Component {
         this.setState({sortDirection: !sortDirection});
     }
 
+    filterBy = (filterName, filterValue) => {
+        let filters = this.state.filters;
+
+        let filterExists = filters[filterName] ? filters[filterName] == filterValue : false;
+
+        if(filterExists) {
+            delete filters[filterName];
+        } else {
+            filters[filterName] = filterValue;
+        }
+
+        this.getTransactions(filters)
+        this.setState({filters: filters});
+    }
+
     render() {
 
-        filterableData = <Filterable data={this.state.transactions} />
-        let spreadsheet = <Spreadsheet data={filterableData} sortBy={this.sortBy}/>;
+        let spreadsheet = <Spreadsheet data={this.state.transactions} sortBy={this.sortBy} filterBy={this.filterBy}/>;
+        let transactionFilter = <Filter filterBy={this.filterBy} filterData={this.state.transactions}/>;
 
         return(
             <div className="finances">
                 <p>Spending History</p>
+                <div className="spreadsheet-header">
+                    {transactionFilter}
+                </div>
                 {spreadsheet}
             </div>
         );

@@ -1,12 +1,12 @@
 import Row from "../Row";
 import List from "../List";
-import Button from "./Button";
+import MenuButton from "./MenuButton";
 
 const ButtonMenu = ({buttonTitles}) => {
     let numInRow = 3;
 
     let buttons = buttonTitles.map((buttonTitle) => {
-        return <Button title={buttonTitle} />
+        return <MenuButton title={buttonTitle} />
     })
 
     let count = 0;

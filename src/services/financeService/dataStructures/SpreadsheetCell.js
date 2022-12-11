@@ -1,13 +1,17 @@
 
 
-const SpreadsheetCell = ({value, onClick}) => {
+const SpreadsheetCell = ({value, onClick, customClass}) => {
     const click = () => {
         onClick(value);
     }
     
+    let cusClass = customClass ? "spreadsheet-cell " + customClass : "spreadsheet-cell";
+
     return(
-        <div className="spreadsheet-cell" onClick={click}>
-            {value}
+        <div className={cusClass}>
+            <div onClick={click}>
+                {value}
+            </div>
         </div>
     );
 }
