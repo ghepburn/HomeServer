@@ -10,8 +10,6 @@ class Filter extends React.Component {
             selectedFilterValues: {},
             selectedFilterArguments: {}
         };
-
-        console.log(this.props.filters);
     }
 
     tryToApplyFilter = (filterName) => {

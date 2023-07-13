@@ -16,7 +16,6 @@ const FilterDisplay = ({filters, filterOptions, selectFilterArgument, selectFilt
 
     let filterDisplay = Object.keys(filters) ? Object.keys(filters).map((key) => {
         let filterName = key;
-        // let filterValue = filters[key];
 
         let selectBoxOptions = [];
         filterOptions[key].forEach((filterOption) => {

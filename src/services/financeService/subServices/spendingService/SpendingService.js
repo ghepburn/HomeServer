@@ -47,7 +47,7 @@ class SpendingService extends React.Component {
 
         let filter = {};
         columns.map((column) => {
-            filter[column.toUpperCase()] = "";
+            filter[column] = "";
         });
 
         this.setState({filters: filter});
