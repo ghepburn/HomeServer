@@ -5,10 +5,24 @@ class FinanceClient extends Client {
 
     async getTransactions(args) {
         let params = "";
-        for (let key in Object.keys(args)) {
-            let param = "?" + key + "=" + args[key];
-            params.append(param)
-        }
+        Object.keys(args).map((key) => {
+            let value = args[key];
+
+            let isValidParam = (typeof key != "undefined" && key.length != 0) && (typeof value != "undefined" && value.length != 0);
+            if (!isValidParam) {
+                return null;
+            }
+
+            if (!params.length) {
+                params = "?"
+            } else {
+                params += "&"
+            }
+
+            let param = key + value;
+
+            params += param;
+        });
 
         let transactions = await this.get("/transactions"+params);
         return transactions;

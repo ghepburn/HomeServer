@@ -2,6 +2,8 @@
 import FinanceClient from "../../FinanceClient";
 import Spreadsheet from "../../dataStructures/Spreadsheet";
 import Filter from "../../dataStructures/filter/Filter";
+import Summary from "../../dataStructures/summary/Summary";
+import Button from "../../../utils/buttons/Button";
 import React from "react";
 
 class SpendingService extends React.Component {
@@ -12,23 +14,43 @@ class SpendingService extends React.Component {
 
         this.state = {
             transactions: [],
+            transactionColumns: [],
 
             sortDirection:false, //allows sorting to alternate directions
-            fitlers: {}
+            filters: {},
+            showFilter: false
         }
 
     } 
 
     async componentDidMount() {
-        this.getTransactions();
+        await this.getTransactions();        
+        this.initializeFilter();
     }
 
     getTransactions = async (args={}) => {
         let transactions = await this.client.getTransactions(args);
+        if (transactions == null) {
+            return null;
+        }
         transactions = transactions.map((transaction) => {
             return transaction;
         })
         this.setState({transactions: transactions});
+
+        let transactionColumns = transactions.length ? Object.keys(transactions[0]) : [];
+        this.setState({transactionColumns: transactionColumns});
+    }
+
+    initializeFilter = () => {
+        let columns = this.state.transactionColumns;
+
+        let filter = {};
+        columns.map((column) => {
+            filter[column.toUpperCase()] = "";
+        });
+
+        this.setState({filters: filter});
     }
 
     sortBy = (sortBy) => {
@@ -63,31 +85,41 @@ class SpendingService extends React.Component {
         this.setState({sortDirection: !sortDirection});
     }
 
-    filterBy = (filterName, filterValue) => {
+    applyFilter = (filterName, filterArgument, filterValue) => {
         let filters = this.state.filters;
 
-        let filterExists = filters[filterName] ? filters[filterName] == filterValue : false;
+        let filterNameExists = Object.keys(filters).includes(filterName);
+        if (filterNameExists) {
 
-        if(filterExists) {
-            delete filters[filterName];
-        } else {
-            filters[filterName] = filterValue;
+            let addingNewFilter = (filterArgument.length && filterValue.length);
+
+            if (addingNewFilter) {
+                filters[filterName] = filterArgument + filterValue;
+            } else {
+                filters[filterName] = "";
+            }
         }
 
-        this.getTransactions(filters)
         this.setState({filters: filters});
+        this.getTransactions(filters);
     }
 
     render() {
 
-        let spreadsheet = <Spreadsheet data={this.state.transactions} sortBy={this.sortBy} filterBy={this.filterBy}/>;
-        let transactionFilter = <Filter filterBy={this.filterBy} filterData={this.state.transactions}/>;
+        let spreadsheet = <Spreadsheet data={this.state.transactions} sortBy={this.sortBy}/>;
+
+        let filterButton = <Button title="Filter" onClick={() => {this.setState({showFilter: !this.state.showFilter})}} />;
+        let transactionFilter = this.state.showFilter ? <Filter filters={this.state.filters} applyFilter={this.applyFilter} data={this.state.transactions}/> : "";
+
+        let transactionSummary = "";//<Summary />;
 
         return(
             <div className="finances">
                 <p>Spending History</p>
                 <div className="spreadsheet-header">
+                    {filterButton}
                     {transactionFilter}
+                    {transactionSummary}
                 </div>
                 {spreadsheet}
             </div>

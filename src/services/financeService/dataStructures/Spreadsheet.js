@@ -2,7 +2,7 @@ import List from "../../utils/List";
 import Row from "../../utils/Row";
 import SpreadsheetCell from "./SpreadsheetCell";
 
-const Spreadsheet = ({data, sortBy, filterBy}) => {
+const Spreadsheet = ({data, sortBy}) => {
     const doNotDisplay = ["isHidden"];
 
     const columns = data.length > 0 ? Object.keys(data[0]) : [];
